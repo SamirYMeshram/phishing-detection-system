@@ -263,30 +263,80 @@ Categories:
 
 ```plaintext
 phishing-detection-system/
-├── app.py                 # Flask app, WSGI entrypoint
-├── controller.py          # Routing to model, result aggregation
-├── model.py               # Heuristic functions & score calculation
-├── onetimescript.py       # Tranco CSV ingestion & DB/JSON update
-├── url_inspector.py       # Legacy CLI for URL parsing
-├── xx.py                  # Email analysis CLI with OAuth2 & NLP
-├── db.py                  # SQLAlchemy models & DB init
-├── requirements.txt       # Python dependencies
-├── Dockerfile             # Container build
-├── docker-compose.yml     # Container orchestration
-├── .env.example           # Template for required environment variables
-├── static/
-│   └── data/
-│       ├── domain-rank.json
-│       └── url-shorteners.txt
-├── templates/
-│   ├── index.html
-│   ├── preview.html
-│   └── source_code.html
-├── migrations/            # (If using Flask-Migrate)
-├── tests/                 # Unit & integration tests
-│   ├── test_model.py
-│   └── test_xx_cli.py
-└── LICENSE                # Apache License 2.0
+phishing_detection
+└── phishing detection
+    ├── .dockerignore
+    ├── .idea
+    │   ├── .gitignore
+    │   ├── SafeSurf-main.iml
+    │   ├── git_toolbox_blame.xml
+    │   ├── inspectionProfiles
+    │   │   └── profiles_settings.xml
+    │   ├── misc.xml
+    │   ├── modules.xml
+    │   ├── vcs.xml
+    │   └── workspace.xml
+    ├── Dockerfile
+    ├── LICENSE
+    ├── README.md
+    ├── __pycache__
+    │   ├── app.cpython-311.pyc
+    │   ├── controller.cpython-311.pyc
+    │   ├── db.cpython-311.pyc
+    │   ├── model.cpython-311.pyc
+    │   ├── onetimescript.cpython-311.pyc
+    │   └── xx.cpython-311.pyc
+    ├── app.py
+    ├── app_original.py
+    ├── controller.py
+    ├── credentials.json
+    ├── credentials_nlp.json
+    ├── db.py
+    ├── docker-compose.yml
+    ├── gmail-client-secrets.json.json
+    ├── instance
+    │   └── domains.db
+    ├── model.py
+    ├── onetimescript.py
+    ├── remain.css
+    ├── remain.html
+    ├── remain.py
+    ├── requirements.txt
+    ├── static
+    │   ├── android-chrome-192x192.png
+    │   ├── android-chrome-512x512.png
+    │   ├── app2.js
+    │   ├── apple-touch-icon.png
+    │   ├── css
+    │   │   └── style.css
+    │   ├── data
+    │   │   ├── domain-rank.json
+    │   │   └── url-shorteners.txt
+    │   ├── favicon-16x16.png
+    │   ├── favicon-32x32.png
+    │   ├── favicon.ico
+    │   ├── js
+    │   │   └── main.js
+    │   ├── phishing.jpg
+    │   ├── safesurf-normal.png
+    │   ├── safesurf-screenshot.png
+    │   ├── safesurf.png
+    │   ├── site.webmanifest
+    │   ├── style2.css
+    │   └── surfsafe-normal.png
+    ├── study.py
+    ├── study2.py
+    ├── templates
+    │   ├── base.html
+    │   ├── index.html
+    │   ├── index2.html
+    │   ├── preview.html
+    │   └── source_code.html
+    ├── token.json
+    ├── url_inspector.py
+    ├── x.py
+    └── xx.py
+
 ``` 
 
 ---
