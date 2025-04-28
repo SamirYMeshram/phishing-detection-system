@@ -1,0 +1,109 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f8f9fa;
+  color: #333;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+h1, h2, h3, h4, h5 {
+  color: #2c3e50;
+}
+
+form {
+  margin-bottom: 40px;
+}
+
+form fieldset {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+form label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+form input[type="text"],
+form input[type="number"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.message-block {
+  background: #f1f3f5;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+pre.snippet {
+  background: #eef;
+  padding: 10px;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+.summary, .classification, .reply, .threats, .nlp-analysis {
+  margin-top: 20px;
+  padding: 15px;
+  background: #e8f0fe;
+  border-left: 5px solid #007bff;
+  border-radius: 8px;
+}
+
+.threat pre {
+  background: #ffe6e6;
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 15px;
+  }
+
+  form input[type="text"],
+  form input[type="number"] {
+    font-size: 14px;
+  }
+
+  button {
+    width: 100%;
+  }
+}

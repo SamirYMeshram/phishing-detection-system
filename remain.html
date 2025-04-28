@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Remain Email Inspector</title>
+  <link rel="stylesheet" href="remain.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Email Inspection</h1>
+    <label>Raw Email (Base64):</label>
+    <textarea id="raw_email" placeholder="Paste base64 raw email here"></textarea>
+
+    <label>Sending IP:</label>
+    <input type="text" id="sending_ip" placeholder="e.g. 203.0.113.45">
+
+    <label>Envelope-From:</label>
+    <input type="text" id="envelope_from" placeholder="mailer@example.com">
+
+    <label>Header-From:</label>
+    <input type="text" id="header_from" placeholder="user@example.com">
+
+    <button id="inspectBtn">Inspect</button>
+
+    <div id="result" class="result">
+      <!-- populated by JS -->
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('inspectBtn').addEventListener('click', async () => {
+      const payload = {
+        raw_email: document.getElementById('raw_email').value.trim(),
+        sending_ip: document.getElementById('sending_ip').value.trim(),
+        envelope_from: document.getElementById('envelope_from').value.trim(),
+        header_from: document.getElementById('header_from').value.trim()
+      };
+      const res = await fetch('/api/inspect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      const out = document.getElementById('result');
+      if (res.ok) {
+        out.innerHTML = `
+          <p><strong>Authentication Passed?</strong> ${data.authentication_passed}</p>
+          <p><strong>Anomaly Score:</strong> ${data.anomaly_score.toFixed(3)}</p>
+          <p><strong>Is Anomalous?</strong> ${data.is_anomalous}</p>
+        `;
+      } else {
+        out.innerHTML = `<p class="error">${data.error || 'Inspection failed'}</p>`;
+      }
+    });
+  </script>
+</body>
+</html>

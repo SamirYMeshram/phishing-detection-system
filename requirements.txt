@@ -1,0 +1,9 @@
+Flask
+dnspython
+emailprotectionslib
+dkimpy
+python-dateutil
+scikit-learn
+geoip2
+numpy
+joblib
