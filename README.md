@@ -1,133 +1,383 @@
-## Phishing Detection System
+# Phishing Detection & Email Analysis System
 
-### Summary
-This Phishing Detection System is an advanced, production-ready Flask application that evaluates URLs against a rich suite of static and dynamic heuristics to compute a trust score and detect malicious intent in real-time, leveraging domain reputation, WHOIS analysis, SSL inspection, heuristic content checks, and third‑party threat intelligence integrations ([frontiersin.org](https://www.frontiersin.org/journals/artificial-intelligence/articles/10.3389/frai.2024.1414122/full?utm_source=chatgpt.com), [sciencedirect.com](https://www.sciencedirect.com/science/article/abs/pii/S0167404813001442?utm_source=chatgpt.com)).
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache2.0-blue.svg)](LICENSE) [![Python Version](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/) [![Build Status](https://img.shields.io/badge/CI-pending-lightgrey.svg)]()
 
-## Table of Contents
-1. [Introduction](#introduction)
-2. [Architecture Overview](#architecture-overview)
-3. [Features](#features)
-4. [Installation & Setup](#installation--setup)
-5. [Configuration](#configuration)
-6. [Usage](#usage)
-7. [Database & Data Maintenance](#database--data-maintenance)
-8. [Extensibility & Customization](#extensibility--customization)
-9. [Testing](#testing)
-10. [Security Considerations](#security-considerations)
-11. [Contribution Guidelines](#contribution-guidelines)
-12. [License](#license)
-13. [Author](#author)
+A comprehensive security toolkit offering:
 
-## Introduction
-Phishing attacks remain one of the most prevalent and harmful cybersecurity threats, tricking users into divulging credentials or financial data by mimicking legitimate websites and communications ([frontiersin.org](https://www.frontiersin.org/journals/artificial-intelligence/articles/10.3389/frai.2024.1414122/full?utm_source=chatgpt.com)). This project provides a heuristic-driven detection engine that scores URLs from 0 to 100 by assessing factors such as domain popularity, age, URL structure, encryption details, and known blacklists ([sciencedirect.com](https://www.sciencedirect.com/science/article/abs/pii/S0167404819301622?utm_source=chatgpt.com)). Designed for both security researchers and production deployments, it balances performance with comprehensive analysis ([researchgate.net](https://www.researchgate.net/publication/347713696_Review_on_Phishing_Attack_Detection_Techniques?utm_source=chatgpt.com)).
+- **URL Phishing Detection Web Service**: Real-time trust scoring of URLs via Flask, combining reputation data, WHOIS analysis, SSL/TLS inspection, content heuristics, and threat intelligence.
+- **Email Threat Analysis CLI** (`xx.py`): Secure OAuth2 access to Gmail and Outlook IMAP, with Google Cloud NLP for sentiment, entity, and category analysis to detect phishing or malicious patterns.
 
-## Architecture Overview
-The system follows a modular architecture with separation of concerns between the web interface, scoring engine, data layer, and third-party integrations ([coding-boot-camp.github.io](https://coding-boot-camp.github.io/full-stack/github/professional-readme-guide/?utm_source=chatgpt.com)). The core components include:
+---
 
-- **Web UI (Flask)**: Handles user interactions, preview rendering, and API endpoints ([github.com](https://github.com/jehna/readme-best-practices?utm_source=chatgpt.com)).
-- **Controller**: Orchestrates feature extraction and aggregates scores.
-- **Model**: Implements individual heuristics (domain rank, WHOIS, HSTS, SSL certs, content checks) and composite scoring ([sciencedirect.com](https://www.sciencedirect.com/science/article/abs/pii/S0167404813001442?utm_source=chatgpt.com)).
-- **Data Layer**: SQLite database for persistence and JSON files for static data (`domain-rank.json`, `url-shorteners.txt`) ([altospam.com](https://www.altospam.com/en/glossary/heuristic-analysis/?utm_source=chatgpt.com)).
-- **Threat Intelligence**: Integrations with PhishTank and optional AI-based extensions for emergent threats ([perception-point.io](https://perception-point.io/guides/ai-security/detecting-and-preventing-ai-based-phishing-attacks-2024-guide/?utm_source=chatgpt.com)).
+## 🔖 Table of Contents
+1. [Key Features](#key-features)
+2. [System Architecture](#system-architecture)
+3. [Prerequisites](#prerequisites)
+4. [Full Setup Guide](#full-setup-guide)
+   - [Environment Variables & .env](#environment-variables--env)
+   - [Python Virtual Environment](#python-virtual-environment)
+   - [Dependency Installation](#dependency-installation)
+   - [Database Initialization & Migrations](#database-initialization--migrations)
+   - [Running in Development](#running-in-development)
+   - [Production Deployment (Gunicorn + Nginx)](#production-deployment-gunicorn--nginx)
+   - [Docker & Docker Compose](#docker--docker-compose)
+5. [Configuration Details](#configuration-details)
+6. [Usage Examples](#usage-examples)
+7. [Project Structure](#project-structure)
+8. [Extensibility & Plugin System](#extensibility--plugin-system)
+9. [Testing & CI Integration](#testing--ci-integration)
+10. [Performance & Monitoring](#performance--monitoring)
+11. [Security Best Practices](#security-best-practices)
+12. [Contribution Guide](#contribution-guide)
+13. [Changelog](#changelog)
+14. [License](#license)
+15. [Author](#author)
 
-## Features
+---
 
-### 1. Interactive Web Interface
-- URL submission form with real-time trust scoring and detailed breakdown ([tilburgsciencehub.com](https://tilburgsciencehub.com/topics/collaborate-share/share-your-work/content-creation/readme-best-practices/?utm_source=chatgpt.com)).
-- Live site preview with asset URL rewriting for sandboxed browsing ([vadesecure.com](https://www.vadesecure.com/en/blog/effective-phishing-protection-heuristics?utm_source=chatgpt.com)).
-- Prettified HTML source-code viewing for safe manual inspection.
+## 💡 Key Features
 
-### 2. Comprehensive Scoring Engine
-- **Domain Reputation**: Utilizes a top‑1M domain ranking list to reward popular domains and penalize obscure ones ([sciencedirect.com](https://www.sciencedirect.com/science/article/abs/pii/S0167404819301622?utm_source=chatgpt.com)).
-- **Domain Age**: WHOIS parsing to calculate domain age and adjust scores accordingly ([philarchive.org](https://philarchive.org/archive/SWAEPD?utm_source=chatgpt.com)).
-- **URL Structure**: Flags URLs with excessive length (>75 chars) and depth (>5 slashes) ([researchgate.net](https://www.researchgate.net/publication/347713696_Review_on_Phishing_Attack_Detection_Techniques?utm_source=chatgpt.com)).
-- **Security Headers**: Checks for HSTS and HTTPS enforcement ([tilburgsciencehub.com](https://tilburgsciencehub.com/topics/collaborate-share/share-your-work/content-creation/readme-best-practices/?utm_source=chatgpt.com)).
-- **SSL/TLS Inspection**: Extracts certificate issuer, validity period, cipher suite, TLS version, and revocation status ([sciencedirect.com](https://www.sciencedirect.com/science/article/abs/pii/S0167404813001442?utm_source=chatgpt.com)).
-- **Content Heuristics**: Detects phishing patterns in page content (onmouseover, forms, iframes, disabled right-click) ([vadesecure.com](https://www.vadesecure.com/en/blog/effective-phishing-protection-heuristics?utm_source=chatgpt.com)).
-- **PhishTank Integration**: Queries the PhishTank API for known malicious URLs ([sciencedirect.com](https://www.sciencedirect.com/science/article/abs/pii/S0167404819301622?utm_source=chatgpt.com)).
+### URL Phishing Detection Web Service
+- **Trust Scoring Engine**: 0–100 score combining:
+  - Domain rank from Tranco Top‑1M
+  - Domain age via WHOIS
+  - HSTS and HTTPS enforcement
+  - URL structure (length & depth)
+  - IP address in URL detection
+  - Redirect chain analysis
+  - Content heuristics (onmouseover, disabled context menus, forms, iframes, pop-ups)
+  - SSL/TLS certificate inspection: issuer, validity period, cipher suite, TLS version, revocation
+  - PhishTank API integration for blacklist lookup
+- **Web UI**: Intuitive interface with detailed breakdown and color‑coded risk levels
+- **Live Preview & Source View**: Sandbox preview with asset URL rewriting; prettified HTML source display
+- **Data Refresh Endpoints**: `/update-db` and `/update-json` for scheduled domain‑rank updates
 
-### 3. Maintenance Endpoints
-- **`/update-db`**: Populates or refreshes the domain-rank SQLite table from the Tranco CSV ([github.com](https://github.com/matiassingers/awesome-readme?utm_source=chatgpt.com)).
-- **`/update-json`**: Regenerates the domain-rank.json file for fast lookup.
+### Email Threat Analysis CLI (`xx.py`)
+- **OAuth2 Authentication**: Gmail via `google-auth-oauthlib` and Outlook via MSAL
+- **IMAP Fetching**: Securely retrieve messages, handle MIME decoding, attachments omitted
+- **Text Cleaning**: HTML stripping and Unicode normalization
+- **NLP Analysis**: Google Cloud Natural Language for sentiment, entity recognition, and text classification
+- **Interactive Console Report**: Summary table of messages with phishing indicators highlighted
 
-## Installation & Setup
+---
 
-### Prerequisites
-- Python 3.9+ and `pip` package manager ([coding-boot-camp.github.io](https://coding-boot-camp.github.io/full-stack/github/professional-readme-guide/?utm_source=chatgpt.com)).
-- (Optional) Docker & Docker Compose for containerized deployment ([hackernoon.com](https://hackernoon.com/5-professional-tips-for-crafting-a-winning-readme?utm_source=chatgpt.com)).
+## 🏗️ System Architecture
 
-### Installation Steps
+```plaintext
++-----------------+      +--------------------+      +-------------------+
+|                 |----->|   Flask Web App    |----->|    Controller     |
+|  User Browser   |      |  (app.py / Gunicorn)|      |(controller.py /   |
+|                 |<-----|                    |<-----|   model.py)       |
++-----------------+      +--------------------+      +-------------------+
+                                                  |       |
+                                                  v       v
+                                          +---------------+    +------------------------+
+                                          | SQLite / JSON |    | Third-Party Services   |
+                                          | domain-rank   |    | - WHOIS                |
+                                          |   storage     |    | - PhishTank API        |
+                                          +---------------+    | - SSL/TLS endpoints    |
+                                                               +------------------------+
+
++-----------------+      +--------------------+      +-------------------+
+| CLI User (TTY)  |----->|  Email CLI Script  |----->|  Google NLP Client|
+| (`xx.py`)       |      |                    |      +-------------------+
++-----------------+      +--------------------+
+| MSAL / OAuth2   |----->| Outlook / Gmail    |
++-----------------+      +--------------------+
+```
+
+---
+
+## ⚙️ Prerequisites
+
+- **Operating System**: Linux / macOS / Windows 10+ with WSL2
+- **Python**: 3.9 or higher
+- **Node.js**: (Optional, for future front-end enhancements)
+- **Docker**: 20.10+ and Docker Compose 1.29+ (for containerized deployments)
+- **Google Cloud Service Account**: JSON key with `language.googleapis.com` enabled
+- **Gmail API OAuth2 credentials** (`credentials.json`)
+- **Azure AD App Registration**: Client ID and Tenant ID with IMAP.AccessAsUser.All scope
+
+---
+
+## 🛠️ Full Setup Guide
+
+### Environment Variables & `.env`
+Create a `.env` file in project root:
+
+```ini
+# Flask settings\NFLASK_ENV=development
+FLASK_APP=app.py
+FLASK_RUN_HOST=0.0.0.0
+FLASK_RUN_PORT=5000
+
+# Database
+database_uri=sqlite:///domains.db
+
+# Google NLP
+GOOGLE_APPLICATION_CREDENTIALS=credentials_nlp.json
+
+# Gmail CLI
+GMAIL_CLI_CREDENTIALS=credentials.json
+gmail_token_path=token.json
+
+# Outlook CLI
+OUTLOOK_IMAP_HOST=outlook.office365.com
+MSAL_CLIENT_ID=<your-azure-client-id>
+MSAL_TENANT_ID=<your-azure-tenant-id>
+msal_token_cache=msal_token.json
+
+# PhishTank (Optional)
+PHISHTANK_API_KEY=<your-api-key>
+``` 
+
+> **Note**: Use [python-dotenv](https://github.com/theskumar/python-dotenv) to load this file automatically.
+
+### Python Virtual Environment
+
 ```bash
-git clone https://github.com/SamirYMeshram/phishing-detection-system.git
-cd phishing-detection-system
 python3 -m venv venv
-source venv/bin/activate
-pip install --upgrade pip
+source venv/bin/activate       # macOS/Linux
+venv\Scripts\activate.bat      # Windows
+pip install --upgrade pip setuptools wheel
+```
+
+### Dependency Installation
+
+```bash
 pip install -r requirements.txt
-```
+```  
+Dependencies: Flask, Flask-SQLAlchemy, requests, beautifulsoup4, dnspython, selenium, google-auth, google-auth-oauthlib, google-api-python-client, google-cloud-language, msal, python-dotenv
 
-### Database Initialization
+### Database Initialization & Migrations
+
 ```bash
-export FLASK_APP=app.py
-flask shell
->>> from db import db; db.create_all()
->>> exit()
+flask db init                  # If using Flask-Migrate
+flask db migrate -m "Initial"
+flask db upgrade
+# Or simple:
+python -c "from db import db; db.init_app(__import__('app').app); db.create_all()"
 ```
 
-### Docker Deployment
+### Running in Development
+
 ```bash
-docker-compose up --build --force-recreate
+export FLASK_ENV=development
+flask run
+```  
+Visit `http://localhost:5000`
+
+### Production Deployment (Gunicorn + Nginx)
+
+```bash
+gunicorn --workers 4 --bind 0.0.0.0:5000 app:app
+```  
+Configure Nginx as reverse proxy with SSL termination, caching static assets, and rate limiting.
+
+### Docker & Docker Compose
+
+1. **Build & Run**
+   ```bash
+docker-compose up --build -d
+```  
+2. **Access Services**
+   - Web UI: `http://localhost:5000`
+   - CLI: attach to container via `docker exec -it phishing_app bash`
+
+```yaml
+# docker-compose.yml (excerpt)
+version: '3.8'
+services:
+  web:
+    build: .
+    env_file: .env
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+  db:
+    image: sqlite:latest
+    volumes:
+      - ./domains.db:/data/databases/domains.db
+``` 
+
+---
+
+## 🔧 Configuration Details
+
+| Variable                     | Description                                            | Default                |
+|------------------------------|--------------------------------------------------------|------------------------|
+| `FLASK_ENV`                  | Flask environment (`development` / `production`)       | `development`          |
+| `GOOGLE_APPLICATION_CREDENTIALS` | Path to Google NLP service-account JSON             | `credentials_nlp.json` |
+| `GMAIL_CLI_CREDENTIALS`      | OAuth2 client secrets for Gmail API                   | `credentials.json`     |
+| `gmail_token_path`           | File path for storing Gmail OAuth token               | `token.json`           |
+| `OUTLOOK_IMAP_HOST`          | IMAP server for Outlook                               | `outlook.office365.com`|
+| `MSAL_CLIENT_ID`             | Azure AD App Client ID                                 | –                      |
+| `MSAL_TENANT_ID`             | Azure AD Tenant ID                                     | –                      |
+| `msal_token_cache`           | File path for MSAL token cache                        | `msal_token.json`      |
+| `PHISHTANK_API_KEY`          | API key for PhishTank (optional, improves rate limits)| –                      |
+
+---
+
+## 🚀 Usage Examples
+
+### URL Scanner (Web)
+
+```bash
+# Start server
+git pull origin main
+source venv/bin/activate
+flask run
+# Open browser at http://localhost:5000
 ```
 
-## Configuration
-- **Environment Variables**:
-  - `FLASK_ENV`: `development` or `production`.
-  - `PHISHTANK_API_KEY`: (Optional) for authenticated API requests in high-volume usage.
-- **Static Data Files**:
-  - `static/data/domain-rank.json`
-  - `static/data/url-shorteners.txt`
+Enter URL, view detailed risk report, use **Preview**/**Source Code** features.
 
-## Usage
-- **Web UI**: Visit `http://localhost:5000/` to analyze URLs.
-- **Preview**: Click **Preview** to view rendered HTML safely.
-- **View Source**: Click **Source Code** for prettified markup.
-- **CLI Integration**: Import `Controller` in external scripts for batch URL processing.
+### Email Analysis CLI
 
-```python
-from controller import Controller
-ctrl = Controller()
-print(ctrl.main("https://example.com"))
+```bash
+python xx.py
 ```
 
-## Database & Data Maintenance
-Use the provided one-time script (`onetimescript.py`) to download and process the Tranco top‑1M CSV into both the SQLite DB and JSON format ([github.com](https://github.com/matiassingers/awesome-readme?utm_source=chatgpt.com)).
+```
+=== Phishing Detection System with Google Cloud NLP ===
+Choose provider (gmail/outlook): gmail
+# (OAuth browser flow)...
+Fetched 50 messages.
+---- Message 1 ----
+From: alerts@example.com
+Date: Mon, 28 Apr 2025 12:45:00 +0530
+Subject: Account Verification Required
+Sentiment: score=-0.25, mag=0.31
+Top Entities:
+  - ExampleCorp (ORGANIZATION), salience=0.76
+Categories:
+  - /Security/Authentication: 0.88
+```
 
-## Extensibility & Customization
-- Add new heuristics by extending `model.py` with new functions and updating the `PROPERTY_SCORE_WEIGHTAGE` map.
-- Integrate alternative threat intelligence feeds via new API modules.
-- Swap SQLite for PostgreSQL by adjusting `SQLALCHEMY_DATABASE_URI` in `app.py`.
+---
 
-## Testing
-- Implement unit tests for each heuristic function using `pytest`.
-- Stub external network calls (WHOIS, PhishTank) to enable offline test runs.
-- Integrate with CI workflows for automated quality checks.
+## 🗂️ Project Structure
 
-## Security Considerations
-- **Input Sanitization**: URLs are validated and prefixed with HTTPS if missing ([tilburgsciencehub.com](https://tilburgsciencehub.com/topics/collaborate-share/share-your-work/content-creation/readme-best-practices/?utm_source=chatgpt.com)).
-- **Rate Limiting**: Deploy behind a reverse proxy or API gateway to throttle abuse ([reddit.com](https://www.reddit.com/r/webdev/comments/txlbxw/next_level_readme/?utm_source=chatgpt.com)).
-- **Data Privacy**: Ensure WHOIS data storage complies with GDPR and other privacy regulations.
+```plaintext
+phishing-detection-system/
+├── app.py                 # Flask app, WSGI entrypoint
+├── controller.py          # Routing to model, result aggregation
+├── model.py               # Heuristic functions & score calculation
+├── onetimescript.py       # Tranco CSV ingestion & DB/JSON update
+├── url_inspector.py       # Legacy CLI for URL parsing
+├── xx.py                  # Email analysis CLI with OAuth2 & NLP
+├── db.py                  # SQLAlchemy models & DB init
+├── requirements.txt       # Python dependencies
+├── Dockerfile             # Container build
+├── docker-compose.yml     # Container orchestration
+├── .env.example           # Template for required environment variables
+├── static/
+│   └── data/
+│       ├── domain-rank.json
+│       └── url-shorteners.txt
+├── templates/
+│   ├── index.html
+│   ├── preview.html
+│   └── source_code.html
+├── migrations/            # (If using Flask-Migrate)
+├── tests/                 # Unit & integration tests
+│   ├── test_model.py
+│   └── test_xx_cli.py
+└── LICENSE                # Apache License 2.0
+``` 
 
-## Contribution Guidelines
-1. Fork the repository and create a descriptive feature branch.
-2. Write tests for any new functionality.
-3. Follow PEP8 style conventions and update documentation accordingly ([medium.com](https://medium.com/%40kc_clintone/the-ultimate-guide-to-writing-a-great-readme-md-for-your-project-3d49c2023357?utm_source=chatgpt.com)).
-4. Submit a pull request with a clear title, description, and linked issue.
+---
 
-## License
-Licensed under the Apache License 2.0. See [LICENSE](LICENSE) for full details.
+## 🧩 Extensibility & Plugin System
 
-## Author
+- **Add New Heuristics**: Implement in `model.py` and register weight in `PROPERTY_SCORE_WEIGHTAGE`.
+- **Custom Threat Feed**: Create modules under `integrations/` and call from `controller.py`.
+- **Alternative DB**: Swap SQLite for PostgreSQL by updating `SQLALCHEMY_DATABASE_URI` and installing `psycopg2`.
+- **Plugin Hooks**: Expose pre- and post-analysis hooks in `Controller` for third-party extensions.
+
+---
+
+## ✅ Testing & CI Integration
+
+1. **Unit Tests**:
+   ```bash
+   pytest --maxfail=1 --disable-warnings -q
+   ```
+2. **CI Pipeline**: Configure GitHub Actions or GitLab CI to:
+   - Run linters (flake8, black check)
+   - Execute tests
+   - Build Docker image
+
+```yaml
+# .github/workflows/ci.yml
+name: CI
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with: { python-version: '3.9' }
+      - run: pip install -r requirements.txt
+      - run: pytest
+```  
+
+---
+
+## 📈 Performance & Monitoring
+
+- **Profiling**: Use `cProfile` on heavy heuristics (WHOIS, SSL inspection)
+- **Caching**:
+  - In-memory caching (e.g., `functools.lru_cache`) for repeated WHOIS and SSL calls
+  - Redis/Memcached for shared environments
+- **Logging**:
+  - Configure Python `logging` with rotating file handlers
+  - Use Sentry or Logstash for centralized error tracking
+
+---
+
+## 🔒 Security Best Practices
+
+- Sanitize URLs before any network calls
+- Rate-limit endpoints using Flask-Limiter or API gateway
+- Store secrets securely (Vault, AWS Secrets Manager)
+- Enforce HTTPS and HSTS in production
+- Validate OAuth tokens and handle refresh securely
+
+---
+
+## 🤝 Contribution Guide
+
+- Fork repository & create feature branch (`feat/`, `fix/`, `doc/` prefixes)
+- Write clear, atomic commits with semantic messages
+- Run tests and linters before pushing
+- Open PR against `main` with issue reference
+- Maintain backward compatibility
+
+---
+
+## 📝 Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for detailed release history.
+
+---
+
+## 📜 License
+
+Apache License 2.0. See [LICENSE](LICENSE).
+
+---
+
+## 👤 Author
+
 **Samir Yogendra Meshram**  
 Email: sameerymeshram@gmail.com  
 GitHub: [SamirYMeshram](https://github.com/SamirYMeshram)
+
+---
 
