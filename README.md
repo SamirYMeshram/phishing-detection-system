@@ -30,7 +30,7 @@ A comprehensive security toolkit offering:
 11. [Security Best Practices](#security-best-practices)
 12. [Contribution Guide](#contribution-guide)
 13. [Changelog](#changelog)
-14. [Screenshot]
+14. [Screenshot](#screenshot)
 15. [License](#license)
 16. [Author](#author)
 
