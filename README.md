@@ -263,79 +263,79 @@ Categories:
 
 ```plaintext
 phishing-detection-system/
-phishing_detection
-└── phishing detection
-    ├── .dockerignore
-    ├── .idea
-    │   ├── .gitignore
-    │   ├── SafeSurf-main.iml
-    │   ├── git_toolbox_blame.xml
-    │   ├── inspectionProfiles
+phishing_detection/                          # Root of the project
+└── phishing detection/                       # Main application directory
+    ├── .dockerignore                         # Files to exclude from Docker build context
+    ├── .idea/                                # IDE metadata (PyCharm/WebStorm settings)
+    │   ├── .gitignore                        # Ignored IDE configs
+    │   ├── SafeSurf-main.iml                 # Project module file for IDE
+    │   ├── git_toolbox_blame.xml             # Git blame plugin settings
+    │   ├── inspectionProfiles/               # Code inspection configurations
     │   │   └── profiles_settings.xml
-    │   ├── misc.xml
-    │   ├── modules.xml
-    │   ├── vcs.xml
-    │   └── workspace.xml
-    ├── Dockerfile
-    ├── LICENSE
-    ├── README.md
-    ├── __pycache__
+    │   ├── misc.xml                          # Miscellaneous IDE settings
+    │   ├── modules.xml                       # Module definitions
+    │   ├── vcs.xml                           # VCS integration settings
+    │   └── workspace.xml                     # UI layout & workspace state
+    ├── Dockerfile                            # Instructions to build Docker image
+    ├── LICENSE                               # Apache 2.0 license text
+    ├── README.md                             # Project overview and setup guide
+    ├── __pycache__/                          # Compiled Python bytecode (auto-generated)
     │   ├── app.cpython-311.pyc
     │   ├── controller.cpython-311.pyc
     │   ├── db.cpython-311.pyc
     │   ├── model.cpython-311.pyc
     │   ├── onetimescript.cpython-311.pyc
     │   └── xx.cpython-311.pyc
-    ├── app.py
-    ├── app_original.py
-    ├── controller.py
-    ├── credentials.json
-    ├── credentials_nlp.json
-    ├── db.py
-    ├── docker-compose.yml
-    ├── gmail-client-secrets.json.json
-    ├── instance
-    │   └── domains.db
-    ├── model.py
-    ├── onetimescript.py
-    ├── remain.css
-    ├── remain.html
-    ├── remain.py
-    ├── requirements.txt
-    ├── static
-    │   ├── android-chrome-192x192.png
+    ├── app.py                                # Entry point for Flask web server
+    ├── app_original.py                       # Backup or alternative version of app.py
+    ├── controller.py                         # Coordinates URL analysis and scoring engine
+    ├── credentials.json                      # OAuth2 client secrets for Gmail API
+    ├── credentials_nlp.json                  # Service-account for Google Cloud NLP
+    ├── db.py                                 # SQLAlchemy models and DB initialization
+    ├── docker-compose.yml                    # Defines multi-container Docker services
+    ├── gmail-client-secrets.json.json        # Duplicate or alternate Gmail credentials file
+    ├── instance/                             # Local instance-specific files
+    │   └── domains.db                        # SQLite database storing domain-rank table
+    ├── model.py                              # Heuristic functions and score calculation logic
+    ├── onetimescript.py                      # One-time ingestion script for domain-rank data
+    ├── remain.css                            # Stylesheet for the email inspection UI
+    ├── remain.html                           # Front-end for email base64 inspector
+    ├── remain.py                             # Flask route or logic for email inspection UI
+    ├── requirements.txt                      # Python package dependencies
+    ├── static/                               # Static assets (images, JS, CSS, data)
+    │   ├── android-chrome-192x192.png        # PWA icons
     │   ├── android-chrome-512x512.png
-    │   ├── app2.js
-    │   ├── apple-touch-icon.png
-    │   ├── css
-    │   │   └── style.css
-    │   ├── data
-    │   │   ├── domain-rank.json
-    │   │   └── url-shorteners.txt
-    │   ├── favicon-16x16.png
+    │   ├── app2.js                            # Custom front-end JS logic
+    │   ├── apple-touch-icon.png              # iOS home-screen icon
+    │   ├── css/                              # Additional CSS directory
+    │   │   └── style.css                     # Main stylesheet
+    │   ├── data/                             # Flat data files
+    │   │   ├── domain-rank.json              # Precomputed domain ranks
+    │   │   └── url-shorteners.txt            # Known URL shortener list
+    │   ├── favicon-16x16.png                 # Browser favicon
     │   ├── favicon-32x32.png
     │   ├── favicon.ico
-    │   ├── js
-    │   │   └── main.js
-    │   ├── phishing.jpg
-    │   ├── safesurf-normal.png
+    │   ├── js/                               # JavaScript directory
+    │   │   └── main.js                       # Client-side logic
+    │   ├── phishing.jpg                      # Asset for landing or docs
+    │   ├── safesurf-normal.png               # UI/branding images
     │   ├── safesurf-screenshot.png
     │   ├── safesurf.png
-    │   ├── site.webmanifest
-    │   ├── style2.css
+    │   ├── site.webmanifest                  # PWA manifest
+    │   ├── style2.css                        # Alternate CSS theme
     │   └── surfsafe-normal.png
-    ├── study.py
-    ├── study2.py
-    ├── templates
-    │   ├── base.html
-    │   ├── index.html
-    │   ├── index2.html
-    │   ├── preview.html
-    │   └── source_code.html
-    ├── token.json
-    ├── url_inspector.py
-    ├── x.py
-    └── xx.py
+    ├── study.py                              # Experimental or research script
+    ├── study2.py                             # Alternate experimental script
+    ├── templates/                            # Jinja2 HTML templates
+    │   ├── base.html                         # Base template with common layout
+    │   ├── index.html                        # Home page for URL analysis
+    │   ├── index2.html                       # Alternate home page version
+    │   ├── preview.html                      # Template for live site preview
+    │   └── source_code.html                  # Template for prettified source view
+    ├── token.json                            # Stored OAuth token for Gmail
+    ├── url_inspector.py                      # CLI tool for URL parsing & HTTP metadata
+    ├── x.py                                  # Placeholder or alternative script
+    └── xx.py                                 # Email analysis CLI with NLP integration
 
 ``` 
 
